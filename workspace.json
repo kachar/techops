@@ -58,39 +58,62 @@
       "projectType": "application",
       "targets": {
         "build": {
-          "executor": "@nrwl/node:build",
+          "executor": "@nrwl/web:build",
           "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/apps/front",
-            "main": "apps/front/src/main.ts",
+            "index": "apps/front/src/index.html",
+            "main": "apps/front/src/main.tsx",
+            "polyfills": "apps/front/src/polyfills.ts",
             "tsConfig": "apps/front/tsconfig.app.json",
-            "assets": ["apps/front/src/assets"]
+            "assets": ["apps/front/src/favicon.ico", "apps/front/src/assets"],
+            "styles": [],
+            "scripts": [],
+            "webpackConfig": "@nrwl/react/plugins/webpack"
           },
           "configurations": {
             "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
               "fileReplacements": [
                 {
                   "replace": "apps/front/src/environments/environment.ts",
                   "with": "apps/front/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
                 }
               ]
             }
           }
         },
         "serve": {
-          "executor": "@nrwl/node:execute",
+          "executor": "@nrwl/web:dev-server",
           "options": {
-            "buildTarget": "front:build"
+            "buildTarget": "front:build",
+            "hmr": true
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "front:build:production",
+              "hmr": false
+            }
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "outputs": ["{options.outputFile}"],
           "options": {
-            "lintFilePatterns": ["apps/front/**/*.ts"]
+            "lintFilePatterns": ["apps/front/**/*.{ts,tsx,js,jsx}"]
           }
         },
         "test": {
@@ -99,6 +122,33 @@
           "options": {
             "jestConfig": "apps/front/jest.config.js",
             "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "front-e2e": {
+      "root": "apps/front-e2e",
+      "sourceRoot": "apps/front-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/front-e2e/cypress.json",
+            "devServerTarget": "front:serve",
+            "tsConfig": "apps/front-e2e/tsconfig.json"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "front:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["apps/front-e2e/**/*.{js,ts}"]
           }
         }
       }
@@ -129,5 +179,21 @@
   "cli": {
     "defaultCollection": "@nrwl/nest"
   },
-  "defaultProject": "api"
+  "defaultProject": "api",
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "style": "@emotion/styled",
+        "linter": "eslint",
+        "babel": true
+      },
+      "component": {
+        "style": "@emotion/styled"
+      },
+      "library": {
+        "style": "@emotion/styled",
+        "linter": "eslint"
+      }
+    }
+  }
 }
