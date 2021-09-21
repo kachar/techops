@@ -25,6 +25,7 @@
     "@nrwl/linter": "12.9.0",
     "@nrwl/nest": "12.9.0",
     "@nrwl/node": "12.9.0",
+    "@nrwl/react": "^12.9.0",
     "@nrwl/tao": "12.9.0",
     "@nrwl/workspace": "12.9.0",
     "@types/jest": "26.0.24",
