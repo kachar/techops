@@ -32,6 +32,9 @@
     },
     "front": {
       "tags": []
+    },
+    "shared-types": {
+      "tags": []
     }
   }
 }
